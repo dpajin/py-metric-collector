@@ -1,9 +1,9 @@
 import logging
 import requests
+import argparse
 from itertools import chain, islice, cycle
 
 logger = logging.getLogger('collector')
-
 
 def print_format_influxdb(datapoints):
     """
@@ -68,6 +68,17 @@ def chunks(iterable, size=1000):
     iterator = iter(iterable)
     for first in iterator:
         yield chain([first], islice(iterator, size - 1))
+
+
+def str_to_bool(v):
+    if isinstance(v, bool):
+       return v
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
 
 
 class Cycle(cycle):

@@ -1,0 +1,20 @@
+parser:
+    measurement: jnpr_nat_pool
+    command: show services nat pool
+    type: xml
+    matches:
+    -   type: multi-value
+        method: xpath
+        xpath: "//service-nat-pool-information/sfw-per-service-set-nat-pool/service-nat-pool[normalize-space(translation-type) = 'dynamic']"
+        #xpath: //service-nat-pool-information/sfw-per-service-set-nat-pool/service-nat-pool
+        loop:
+            interface-name: ./../interface-name
+            service-set-name: ./../service-set-name
+            pool-name: ./pool-name
+            sub-matches:
+            -   xpath: ./pool-ports-in-use
+                variable-name:  pool-ports-in-use
+            -   xpath: ./effective-port-blocks
+                variable-name: effective-port-blocks
+            -   xpath: ./effective-ports
+                variable-name:  effective-ports

@@ -1,0 +1,30 @@
+parser:
+    measurement: jnpr_nat_pool_detail
+    command: show services nat pool detail
+    type: xml
+    matches:
+    -   type: multi-value
+        method: xpath
+        xpath: "//service-nat-pool-information/sfw-per-service-set-nat-pool/service-nat-pool[normalize-space(translation-type) = 'dynamic']"
+        #xpath: //service-nat-pool-information/sfw-per-service-set-nat-pool/service-nat-pool
+        loop:
+            interface-name: ./../interface-name
+            service-set-name: ./../service-set-name
+            pool-name: ./pool-name
+            sub-matches:
+            -   xpath: ./pool-ports-in-use
+                variable-name: pool-ports-in-use
+            -   xpath: ./pool-max-ports-in-use
+                variable-name: pool-max-ports-in-use
+            -   xpath: ./max-port-blocks-used
+                variable-name: max-port-blocks-used
+            -   xpath: ./port-blocks-in-use
+                variable-name: port-blocks-in-use
+            -   xpath: ./port-block-allocation-errors
+                variable-name: port-block-allocation-errors
+            -   xpath: ./port-block-mem-alloc-failure-errors
+                variable-name: port-block-mem-alloc-failure-errors
+            -   xpath: ./port-blocks-limit-exceeded-errors
+                variable-name: port-blocks-limit-exceeded-errors
+            -   xpath: ./pool-users
+                variable-name: pool-users

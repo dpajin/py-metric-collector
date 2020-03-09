@@ -13,13 +13,14 @@ global_measurement_prefix = 'metric_collector'
 class Collector:
 
     def __init__(self, hosts_manager, parser_manager, output_type, output_addr,
-            collect_facts=True, timeout=30):
+            collect_facts=True, timeout=30, use_hostname=True):
         self.hosts_manager = hosts_manager
         self.parser_manager = parser_manager
         self.output_type = output_type
         self.output_addr = output_addr
         self.collect_facts = collect_facts
         self.timeout = timeout
+        self.use_hostname = use_hostname
 
     def collect(self, worker_name, hosts=None, host_cmds=None, cmd_tags=None):
         if not hosts and not host_cmds:
@@ -49,9 +50,12 @@ class Collector:
             if device_type == 'juniper':
                 dev = netconf_collector.NetconfCollector(
                         host=host, address=host_address, credential=credential,
-                        parsers=self.parser_manager, context=host_context, collect_facts=self.collect_facts, timeout=self.timeout)
+                        parsers=self.parser_manager, context=host_context, collect_facts=self.collect_facts, timeout=self.timeout, use_hostname=self.use_hostname)
             elif device_type in ['arista', 'f5']:
                 dev = json_collector.JsonCollector(
+                        parsers=self.parser_manager, context=host_context, collect_facts=self.collect_facts, timeout=self.timeout, use_hostname=self.use_hostname)
+            elif device_type == 'f5':
+                dev = f5_rest_collector.F5Collector(
                     host=host, address=host_address, credential=credential,
                     parsers=self.parser_manager, context=host_context, device_type=device_type, timeout=self.timeout)
             dev.connect()

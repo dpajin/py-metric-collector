@@ -11,13 +11,14 @@ class Scheduler:
 
     def __init__(self, creds_conf, cmds_conf, parsers_dir, output_type, output_addr,
                  max_worker_threads=1, use_threads=True, num_threads_per_worker=10,
-                 collector_timeout=30):
+                 collector_timeout=30, collect_facts=True, use_hostname=True):
         self.workers = {}
         self.working = set()
         self.host_mgr = host_manager.HostManager(credentials=creds_conf, commands=cmds_conf)
         self.parser_mgr = parser_manager.ParserManager(parser_dir=parsers_dir)
         self.collector = collector.Collector(self.host_mgr, self.parser_mgr, output_type, output_addr,
-            timeout=collector_timeout)
+            timeout=collector_timeout, collect_facts=collect_facts, use_hostname=use_hostname)
+
         self.max_worker_threads = max_worker_threads
         self.output_type = output_type
         self.output_addr = output_addr

@@ -2,3 +2,5 @@ lastfailed
 lib/py_metric_collector.egg-info
 quickstart/logs
 quickstart/lab*
+__pycache__
+*.pyc

@@ -43,6 +43,7 @@ class NetconfCollector():
 
     self.pyez = None
     self.facts = {}
+    self.facts['device_ip'] = address
 
     self.parsers = parsers
 
@@ -132,7 +133,7 @@ class NetconfCollector():
 
       ## Based on parameter defined in config file
       if self.__use_hostname and self.pyez.facts['hostname'] != self.hostname:
-        hostname = self.pyez.facts['hostname']
+        hostname = self.pyez.facts['hostname'] if self.pyez.facts['hostname'] is not None else self.hostname
         logger.info('[%s]: Host will now be referenced as : %s', self.hostname, hostname)
         self.hostname = hostname
       else:

@@ -206,6 +206,7 @@ def main():
     full_parser.add_argument("--hosts", default="hosts.yaml", help="Hosts file in yaml")
     full_parser.add_argument("--commands", default="commands.yaml", help="Commands file in Yaml")
     full_parser.add_argument("--credentials", default="credentials.yaml", help="Credentials file in Yaml")
+    full_parser.add_argument("--usehostname", default=True, help="Use hostname from device instead of IP")
 
     full_parser.add_argument("--no-facts", action='store_false', help="Disable facts collection on device (remove version and product name in results)")
     
@@ -232,6 +233,9 @@ def main():
     ### ------------------------------------------------------------------------------
     max_connection_retries = dynamic_args['retry']
     logging_level = int(dynamic_args['loglvl'])
+
+    collect_facts=dynamic_args.get('no_facts', True)
+    use_hostname = utils.str_to_bool(dynamic_args['usehostname'])
 
     ### ------------------------------------------------------------------------------
     ### Validate Arguments
@@ -327,7 +331,8 @@ def main():
             dynamic_args['output_type'], dynamic_args['output_addr'],
             max_worker_threads=max_worker_threads,
             use_threads=use_threads, num_threads_per_worker=max_collector_threads,
-            collector_timeout=dynamic_args['collector_timeout']
+            collector_timeout=dynamic_args['collector_timeout'],
+            collect_facts=collect_facts, use_hostname=use_hostname
         )
         hri = dynamic_args.get('hosts_refresh_interval', 6 * 60 * 60)
         select_hosts(
@@ -349,13 +354,16 @@ def main():
         commands=general_commands
     )
     hosts_manager.update_hosts(hosts_conf)
+    logger.info('CLI Argument2 "usehostname" value is: %s', use_hostname)
+
     coll = collector.Collector(
             hosts_manager=hosts_manager, 
             parser_manager=parsers_manager, 
             output_type=dynamic_args['output_type'], 
             output_addr=dynamic_args['output_addr'],
-            collect_facts=dynamic_args.get('no_facts', True),
-            timeout=dynamic_args['collector_timeout']
+            timeout=dynamic_args['collector_timeout'],
+            collect_facts=collect_facts,
+            use_hostname=use_hostname
     )
     target_hosts = hosts_manager.get_target_hosts(tags=tag_list)
 
