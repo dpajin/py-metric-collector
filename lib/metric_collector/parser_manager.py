@@ -347,6 +347,8 @@ class ParserManager:
 
                     if 'variable-type' in sub_match:
                       value_tmp = self.eval_variable_value(value_tmp, type=sub_match['variable-type'])
+                    else:
+                      value_tmp = self.eval_variable_value(value_tmp, type=None)
                     
                     if 'enumerate' in sub_match:
                       enum_match = False
@@ -663,13 +665,29 @@ class ParserManager:
 
   def eval_variable_value(self, value, **kwargs):
 
-    if (kwargs["type"] == "integer"):
+    if (kwargs["type"] == None):
+      try:
+        return int(value)
+      except:
+        try:
+          return float(value)
+        except:
+          try:
+            return str(value)
+          except:
+            logger.error('variable value %s is not int, float or str', value)
+    elif (kwargs["type"] == "integer"):
       value =  re.sub('G','000000000',value)
       value =  re.sub('M','000000',value)
       value =  re.sub('K','000',value)
       return(int(float(value)))
     elif kwargs["type"] == "string":
-      return value
+      return str(value)
+    elif kwargs["type"] == "float":
+      try:
+        return float(value)
+      except:
+        logger.error('variable value %s is not float', value)
     else:
       logger.error('An unkown variable-type found: %s', kwargs["type"])
       return value
@@ -744,7 +762,10 @@ class ParserManager:
     try:
       int(float(field))
     except ValueError:
-      return False
+      try:
+        str(field)
+      except Exception as e:
+        return False
     return True
 
 

@@ -54,7 +54,15 @@ def format_datapoints_inlineprotocol(datapoints):
             else:
                 fields = fields + ','
 
-            fields = fields + '{0}={1}'.format(tag,value)
+            if isinstance(value, str):
+                fields = fields + '{0}="{1}"'.format(tag,value)
+            elif isinstance(value, int):
+                fields = fields + '{0}={1}i'.format(tag,value)
+            elif isinstance(value, float):
+                fields = fields + '{0}={1}'.format(tag,value)
+            else:
+                logger.warning('Failed to send field value to influx, field {} with value {} is not str, int or float'.format(tag, value))
+
 
         if datapoint['tags']:
           formatted_data = "{0},{1} {2} {3}".format(datapoint['measurement'], tags, fields, datapoint['timestamp'])

@@ -1,0 +1,76 @@
+parser:
+    measurement: chassis_hardware
+    command: show chassis hardware
+    type: xml
+    matches:
+
+# default-if-missing: 0
+    -   type: multi-value
+        method: xpath
+        xpath: "//chassis-inventory/chassis/chassis-module/chassis-sub-module/chassis-sub-sub-module"
+        loop:
+            name: ./name
+            parent-module: ./../../name
+            parent-sub-module: ./../name
+            sub-matches:
+            -   xpath: ./version
+                variable-name: version 
+                variable-type: string
+            -   xpath: ./part-number
+                variable-name: part-number
+                variable-type: string
+            -   xpath: ./serial-number
+                variable-name: serial-number
+                variable-type: string
+            -   xpath: ./description
+                variable-name: description
+                variable-type: string
+            -   xpath: ./model-number
+                variable-name: model-number
+                variable-type: string
+
+    -   type: multi-value
+        method: xpath
+        xpath: "//chassis-inventory/chassis/chassis-module/chassis-sub-module"
+        loop:
+            name: ./name
+            parent-module: ./../name
+            sub-matches:
+                -   xpath: ./version
+                    variable-name: version 
+                    variable-type: string
+                -   xpath: ./part-number
+                    variable-name: part-number
+                    variable-type: string
+                -   xpath: ./serial-number
+                    variable-name: serial-number
+                    variable-type: string
+                -   xpath: ./description
+                    variable-name: description
+                    variable-type: string
+                -   xpath: ./model-number
+                    variable-name: model-number
+                    variable-type: string
+
+    -   type: multi-value
+        method: xpath
+        xpath: "//chassis-inventory/chassis/chassis-module"
+        loop:
+            name: ./name
+            sub-matches:
+                -   xpath: ./version
+                    variable-name: version 
+                    variable-type: string
+                -   xpath: ./part-number
+                    variable-name: part-number
+                    variable-type: string
+                -   xpath: ./serial-number
+                    variable-name: serial-number
+                    variable-type: string
+                -   xpath: ./description
+                    variable-name: description
+                    variable-type: string
+                -   xpath: ./model-number
+                    variable-name: model-number
+                    variable-type: string
+

@@ -11,6 +11,7 @@ parser:
             interface-name: ./../interface-name
             service-set-name: ./../service-set-name
             pool-name: ./pool-name
+            pool-address-range: ./pool-address-range-list/pool-address-range 
             sub-matches:
             -   xpath: ./pool-ports-in-use
                 variable-name:  pool-ports-in-use
@@ -18,3 +19,6 @@ parser:
                 variable-name: effective-port-blocks
             -   xpath: ./effective-ports
                 variable-name:  effective-ports
+            -   xpath: ./port-block-size
+                variable-name:  port-block-size
+                

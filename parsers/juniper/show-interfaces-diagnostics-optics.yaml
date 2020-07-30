@@ -3,31 +3,224 @@ parser:
     command: show interfaces diagnostics optics
     type: xml
     matches:
-### -----------------------------------------------------------------------------
-### Received optical power per lane
-### -----------------------------------------------------------------------------
+
     -   type: multi-value
         method: xpath
-        xpath: "//interface-information/physical-interface/optics-diagnostics/optics-diagnostics-lane-values[not(laser-rx-optical-power<0.025)]"
-        loop:
-            interface: ./../../name
-            lane: ./lane-index
-            sub-matches:
-            -   xpath: ./laser-rx-optical-power
-                variable-name: rx-optical-power
-            -   xpath: ./laser-rx-optical-power-dbm
-                variable-name: rx-optical-power-dbm
-            -   xpath: ./laser-output-power
-                variable-name: output-power
-### -----------------------------------------------------------------------------
-### Optic Temperature
-### -----------------------------------------------------------------------------
-    -   type: multi-value
-        method: xpath
-        measurement: interface_optics_temp
         xpath: "//interface-information/physical-interface/optics-diagnostics"
         loop:
             interface: ./../name
             sub-matches:
+
             -   xpath: ./module-temperature/@celsius
-                variable-name: temperature 
+                variable-name: temperature
+                variable-type:  float
+
+            -   xpath: ./module-voltage
+                variable-name: module-voltage
+                variable-type:  float
+            -   xpath: ./laser-bias-current
+                variable-name: laser-bias-current
+                variable-type:  float
+
+            -   xpath: ./laser-output-power
+                variable-name: tx-optical-power
+                variable-type:  float
+            -   xpath: ./laser-output-power-dbm
+                variable-name: tx-optical-power-dbm
+                variable-type:  float
+
+                # these two are from 1G SFP interfaces
+            -   xpath: ./rx-signal-avg-optical-power
+                variable-name: rx-optical-power
+                variable-type:  float
+            -   xpath: ./rx-signal-avg-optical-power-dbm
+                variable-name: rx-optical-power-dbm
+                variable-type:  float
+
+                # these two are from 10G XFP interface 
+            -   xpath: ./laser-rx-optical-power
+                variable-name: rx-optical-power
+                variable-type:  float
+            -   xpath: ./laser-rx-optical-power-dbm
+                variable-name: rx-optical-power-dbm
+                variable-type:  float
+
+            -   xpath: ./laser-bias-current-high-alarm
+                variable-name: laser-bias-current-high-alarm
+                enumerate:
+                  'off': 0
+                  'on': 1
+            
+            -   xpath: ./laser-bias-current-low-alarm
+                variable-name: laser-bias-current-low-alarm
+                enumerate:
+                  'off': 0
+                  'on': 1
+            
+            -   xpath: ./laser-bias-current-high-warn
+                variable-name: laser-bias-current-high-warn
+                enumerate:
+                  'off': 0
+                  'on': 1
+            
+            -   xpath: ./laser-bias-current-low-warn
+                variable-name: laser-bias-current-low-warn
+                enumerate:
+                  'off': 0
+                  'on': 1
+                  
+            -   xpath: ./laser-tx-power-high-alarm
+                variable-name: laser-tx-power-high-alarm
+                enumerate:
+                  'off': 0
+                  'on': 1
+            
+            -   xpath: ./laser-tx-power-low-alarm
+                variable-name: laser-tx-power-low-alarm
+                enumerate:
+                  'off': 0
+                  'on': 1
+            
+            -   xpath: ./laser-tx-power-high-warn
+                variable-name: laser-tx-power-high-warn
+                enumerate:
+                  'off': 0
+                  'on': 1
+            
+            -   xpath: ./laser-tx-power-low-warn
+                variable-name: laser-tx-power-low-warn
+                enumerate:
+                  'off': 0
+                  'on': 1
+            
+            -   xpath: ./module-temperature-high-alarm
+                variable-name: module-temperature-high-alarm
+                enumerate:
+                  'off': 0
+                  'on': 1
+            
+            -   xpath: ./module-temperature-low-alarm
+                variable-name: module-temperature-low-alarm
+                enumerate:
+                  'off': 0
+                  'on': 1
+            
+            -   xpath: ./module-temperature-high-warn
+                variable-name: module-temperature-high-warn
+                enumerate:
+                  'off': 0
+                  'on': 1
+            
+            -   xpath: ./module-temperature-low-warn
+                variable-name: module-temperature-low-warn
+                enumerate:
+                  'off': 0
+                  'on': 1
+            
+            -   xpath: ./laser-rx-power-high-alarm
+                variable-name: laser-rx-power-high-alarm
+                enumerate:
+                  'off': 0
+                  'on': 1
+            
+            -   xpath: ./laser-rx-power-low-alarm
+                variable-name: laser-rx-power-low-alarm
+                enumerate:
+                  'off': 0
+                  'on': 1
+            
+            -   xpath: ./laser-rx-power-high-warn
+                variable-name: laser-rx-power-high-warn
+                enumerate:
+                  'off': 0
+                  'on': 1
+            
+            -   xpath: ./laser-rx-power-low-warn
+                variable-name: laser-rx-power-low-warn
+                enumerate:
+                  'off': 0
+                  'on': 1
+            
+            -   xpath: ./module-not-ready-alarm
+                variable-name: module-not-ready-alarm
+                enumerate:
+                  'off': 0
+                  'on': 1
+            
+            -   xpath: ./module-power-down-alarm
+                variable-name: module-power-down-alarm
+                enumerate:
+                  'off': 0
+                  'on': 1
+            
+            -   xpath: ./tx-data-not-ready-alarm
+                variable-name: tx-data-not-ready-alarm
+                enumerate:
+                  'off': 0
+                  'on': 1
+            
+            -   xpath: ./tx-not-ready-alarm
+                variable-name: tx-not-ready-alarm
+                enumerate:
+                  'off': 0
+                  'on': 1
+            
+            -   xpath: ./tx-laser-fault-alarm
+                variable-name: tx-laser-fault-alarm
+                enumerate:
+                  'off': 0
+                  'on': 1
+            
+            -   xpath: ./tx-cdr-loss-of-lock-alarm
+                variable-name: tx-cdr-loss-of-lock-alarm
+                enumerate:
+                  'off': 0
+                  'on': 1
+            
+            -   xpath: ./rx-not-ready-alarm
+                variable-name: rx-not-ready-alarm
+                enumerate:
+                  'off': 0
+                  'on': 1
+            
+            -   xpath: ./rx-loss-of-signal-alarm
+                variable-name: rx-loss-of-signal-alarm
+                enumerate:
+                  'off': 0
+                  'on': 1
+            
+            -   xpath: ./rx-cdr-loss-of-lock-alarm
+                variable-name: rx-cdr-loss-of-lock-alarm
+                enumerate:
+                  'off': 0
+                  'on': 1
+            
+
+# ### -----------------------------------------------------------------------------
+# ### Optic Temperature
+# ### -----------------------------------------------------------------------------
+#     -   type: multi-value
+#         method: xpath
+#         measurement: interface_optics_temp
+#         xpath: "//interface-information/physical-interface/optics-diagnostics"
+#         loop:
+#             interface: ./../name
+#             sub-matches:
+#             -   xpath: ././module-temperature/@celsius
+#                 variable-name: temperature 
+# ### -----------------------------------------------------------------------------
+# ### Received optical power per lane
+# ### -----------------------------------------------------------------------------
+#     -   type: multi-value
+#         method: xpath
+#         xpath: "//interface-information/physical-interface/optics-diagnostics/optics-diagnostics-lane-values[not(laser-rx-optical-power<0.025)]"
+#         loop:
+#             interface: ./../../name
+#             lane: ./lane-index
+#             sub-matches:
+#             -   xpath: ././laser-rx-optical-power
+#                 variable-name: rx-optical-power
+#             -   xpath: ././laser-rx-optical-power-dbm
+#                 variable-name: rx-optical-power-dbm
+#             -   xpath: ././laser-output-power
+#                 variable-name: output-power
